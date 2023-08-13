@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Card, Button, TextField, Grid, CircularProgress } from '@mui/material';
+import { Card, Button, TextField, Grid, CircularProgress, InputAdornment } from '@mui/material';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useNavigate,useLocation } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import SendIcon from '@mui/icons-material/Send'
 import CloseIcon from '@mui/icons-material/Close'
@@ -19,8 +20,9 @@ const ContactForm = () => {
     const [value, setValue] = useState(defaultValues);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const location=useLocation()
+    const location = useLocation()
     const isEditMode = location.state && location.state.data;
+    // setting form values based on edit mode or not
     useState(() => {
         if (isEditMode) {
             setValue(location.state.data);
@@ -30,51 +32,71 @@ const ContactForm = () => {
     }, [isEditMode, location.state]);
 
     const handleClose = () => {
-        setValue(defaultValues);
+        if (isEditMode) {
+            navigate('/ContactDetails')
+            setValue(defaultValues)
+        } else {
+            setValue(defaultValues)
+        }
+        ;
     };
-
+    // Handle input on change
     const handleChange = (event) => {
         const inputName = event.target.name;
         const inputValue = event.target.value;
         setValue({ ...value, [inputName]: inputValue });
     };
 
+    // Handle form submission
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsLoading(true);
+
         try {
+            let response;
             if (isEditMode) {
-                const response = await axios.put('http://localhost:5000/updateUser', value);
-                if (response.data && response.data.message) {
-                    toast.success(response.data.message, {
-                        position: toast.POSITION.TOP_RIGHT,
-                        autoClose: 500,
-                    });
-                }
+                response = await axios.put('http://localhost:5000/updateUser', value);
             } else {
-                const response = await axios.post('http://localhost:5000/createUser', value);
-                if (response.data && response.data.message) {
-                    toast.success(response.data.message, {
-                        position: toast.POSITION.TOP_RIGHT,
-                        autoClose: 500,
-                    });
-                }
+                response = await axios.post('http://localhost:5000/createUser', value);
+            }
+            if (response.data && response.data.message) {
+                // Showing success toast 
+                toast.success(response.data.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 600,
+                    onClose: () => {
+                        setTimeout(() => {
+                            setIsLoading(false);
+                            setValue(defaultValues);
+                            navigate('/ContactDetails');
+                        }, 1500);
+                    }
+                });
+            } else {
+                // Showing error toast
+                toast.error(response.error, {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 600,
+                    onClose: () => {
+                        setIsLoading(false);
+                    }
+                });
             }
         } catch (error) {
+            // Showing error toast
             console.log(error);
             toast.error('An error occurred', {
                 position: toast.POSITION.TOP_RIGHT,
                 autoClose: 500,
+                onClose: () => {
+                    setIsLoading(false);
+                }
             });
         }
-
-        setIsLoading(false);
-        setValue(defaultValues);
-        navigate('/ContactDetails');
     };
-
     return (
         <>
+            <ToastContainer />
             <Card className='card-container'>
                 <p className='card-heading'>Contact Form</p>
                 <form onSubmit={handleSubmit}>
@@ -109,14 +131,22 @@ const ContactForm = () => {
                             <TextField
                                 name='contact'
                                 label='Contact Number'
-                                type='number'
+                                type='tel'
+                                pattern="^[+]91[0-9]{10}$"
                                 required
                                 size="small"
                                 value={value.contact}
                                 onChange={handleChange}
                                 fullWidth
                                 variant='outlined'
+                                inputProps={{
+                                    maxLength: 10,
+                                }}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+                                }}
                             />
+
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -143,14 +173,15 @@ const ContactForm = () => {
                                 fullWidth
                                 variant='outlined'
                                 multiline
+                                inputProps={{ maxLength: 4000 }}
                                 rows={4}
                             />
                         </Grid>
                     </Grid>
                     <div className='button-container'>
-                        <Button variant='outlined' color='warning' onClick={handleClose}  startIcon={
-                                    <CloseIcon style={{ fontSize: '16px' }} />
-                                }>
+                        <Button variant='outlined' color='warning' onClick={handleClose} startIcon={
+                            <CloseIcon style={{ fontSize: '16px' }} />
+                        }>
                             Cancel
                         </Button>
                         <Button

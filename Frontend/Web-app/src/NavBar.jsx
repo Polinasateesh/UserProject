@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import './App.css'
-// import Logo from "./assets/pngwing.com.png";
+import logo from "./assets/pngwing.com.png";
 
 const NavBar = () => {
   return (
@@ -9,11 +9,11 @@ const NavBar = () => {
         to="/"
         className="link"
       >
-        {/* <img src={Logo} height={"40px"} width={"40px"} /> */}
-        <p>Sateesh</p>
+        <img src={logo} alt="logo" />
+
       </Link>
       <div
-      className=".nav-items"
+        className=".nav-items"
       >
         <Link
           to="/"

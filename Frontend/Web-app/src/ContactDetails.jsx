@@ -6,52 +6,45 @@ import {
     IconButton,
     Icon,
     Tooltip,
-
-
 } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
+
 
 const ActionView = ({ row, getUserDetails }) => {
     const navigate = useNavigate();
-
     var data = {}
     if (row != null) {
         data = row
     }
-
-
     const handleDeleteData = async (data) => {
-
         try {
             console.log("data.id:", data.id);
             const response = await axios.delete('http://localhost:5000/deleteUserData', { data: { id: data.id } });
             console.log('response', response);
             if (response.data && response.data.message) {
                 console.log(response.data.message);
-                toast.success('hi', {
+                toast.success(response.data.message, {
                     position: toast.POSITION.TOP_RIGHT,
                     autoClose: 500,
                 })
 
                 getUserDetails();
             } else {
-                console.log('Error deleting data:', response.data.error);
+                console.log('Error deleting data:', response.error);
             }
         } catch (error) {
             console.error('An error occurred:', error);
         }
     }
-
     const handleEditData=(data)=>{
         navigate('/',{state:{data:data}})
     }
-
     return (
         <div className='action-colomn'>
                 <IconButton onClick={() => handleEditData(data)} size="small">
@@ -111,7 +104,8 @@ const ContactDetails = () => {
         {
             name: 'SNo',
             selector: (row) => row.sno,
-            sortable: true
+            sortable: true,
+            width:'75px'
         },
         {
             name: 'First Name',
@@ -133,15 +127,20 @@ const ContactDetails = () => {
         },
         {
             name: 'Email',
-            selector: row => row.email,
+            selector: row => <Tooltip title={row.email}>{row.email}</Tooltip>,
             sortable: true,
 
         },
         {
             name: 'Message',
-            selector: row => row.message,
+            selector: row => (
+                <Tooltip title={row.message}>
+                    {row.message.length > 25 ? `${row.message.slice(0, 20)}...` : row.message}
+                </Tooltip>
+            ),
             sortable: true,
         },
+        
         {
             name: 'Action',
             selector: (row) => <ActionView row={row} getUserDetails={getUserDetails} />,
@@ -151,6 +150,7 @@ const ContactDetails = () => {
     ];
     return (
         <>
+        <ToastContainer/>
             <Card className='card-container'>
                 <div className='card-header'>
                     <p className='card-heading'>Contact Details</p>

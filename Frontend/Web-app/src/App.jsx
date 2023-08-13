@@ -3,8 +3,21 @@ import { Suspense, lazy } from "react";
 import NavBar from './NavBar'
 const ContactForm = lazy(() => import("./ContactForm"));
 const ContactDetails = lazy(() => import("./ContactDetails"));
+import { CircularProgress } from '@mui/material';
 
 const App = () => {
+  const CenteredCircularProgress = () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "60vh", 
+      }}
+    >
+      <CircularProgress size={50} />
+    </div>
+  );
   return (
     <>
       <BrowserRouter>
@@ -13,7 +26,7 @@ const App = () => {
           <Route
             path="/"
             element={
-              <Suspense fallback={<p>Loading...</p>}>
+              <Suspense fallback={<CenteredCircularProgress />}>
                 <ContactForm />
               </Suspense>
             }
@@ -21,7 +34,7 @@ const App = () => {
           <Route
             path="ContactDetails"
             element={
-              <Suspense fallback={<p>Loading...</p>}>
+              <Suspense fallback={<CenteredCircularProgress/>}>
                 <ContactDetails />
               </Suspense>
             }

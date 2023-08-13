@@ -26,9 +26,11 @@
 }
 
 .card-container{
-  padding: 20px;
-  
-  
+  padding: 30px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin-left: 80px;
+  margin-right: 80px; 
 }
 .button-container{
   display: flex;
@@ -36,11 +38,12 @@
   justify-content: center;
   align-items: center;
   padding: 10px;
+  margin-top: 15px;
   
 }
 
 .card-heading{
-  font-size: 14px;
+  font-size: 18px;
   margin-bottom: 20px;
   font-weight: 600;
   font-family: 'Roboto';
@@ -64,3 +67,10 @@
   justify-content: center; 
   align-items: center; 
 }
+img{
+  height: 40px;
+  width: 40px;
+  
+}
+
+
