@@ -3,17 +3,21 @@ const app = express();
 const cors = require('cors');
 const mysql = require('mysql');
 const port = 5000;
-app.use(express.json());
-app.use(cors());
 
-const connection = mysql.createConnection({
+// Middleware
+app.use(express.json()); 
+app.use(cors()); 
+
+// Create a connection to  database
+const DB = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
   database: 'client'
 });
 
-connection.connect((err) => {
+// Checking database conntection
+DB.connect((err) => {
   if (err) {
     console.error('Error connecting to database:', err);
   } else {
@@ -21,10 +25,11 @@ connection.connect((err) => {
   }
 });
 
+// API to retrieve users from the database
 app.get('/getUsers', (request, response) => {
   try {
-    const getQuery=`SELECT * FROM user`
-    connection.query(getQuery, (err, results) => {
+    const getQuery = `SELECT * FROM user`;
+    DB.query(getQuery, (err, results) => {
       if (err) {
         console.error('Error retrieving users:', err);
         response.status(500).json({ error: 'Failed to retrieve users' });
@@ -39,18 +44,19 @@ app.get('/getUsers', (request, response) => {
   }
 });
 
+// API to create a new user in the database
 app.post('/createUser', (request, response) => {
   try {
     const { firstName, lastName, email, contact, message } = request.body;
     const postQuery = `INSERT INTO user (firstName, lastName, email, contact, message) VALUES ('${firstName}','${lastName}','${email}','${contact}','${message}')`;
 
-    connection.query(postQuery, [firstName, lastName, email, contact, message], (err, results) => {
+    DB.query(postQuery, [firstName, lastName, email, contact, message], (err, results) => {
       if (err) {
         console.error('Error creating user:', err);
         response.status(500).json({ error: 'Failed to create user' });
       } else {
         console.log(results);
-        response.json({ message: 'Data created successfully' });
+        response.json({ message: 'User created successfully' });
       }
     });
   } catch (error) {
@@ -59,55 +65,59 @@ app.post('/createUser', (request, response) => {
   }
 });
 
+// API to delete a user from the database
 app.delete('/deleteUserData', (request, response) => {
-    console.log('request',request.body)
-    try {
-      const { id} = request.body;
-      const postQuery = `DELETE FROM user WHERE id=${id}`;
-  
-      connection.query(postQuery, (err, results) => {
-        if (err) {
-          console.error('Error creating user:', err);
-          response.status(500).json({ error: 'Failed to delete user' });
-        } else {
-          console.log(results);
-          response.json({ message: 'Data deleted successfully' });
-        }
-      });
-    } catch (error) {
-      console.error('An error occurred:', error);
-      response.status(500).json({ error: 'Internal server error' });
-    }
-  });
-  app.put('/updateUser', async (request, response) => {
-    try {
-        const { id, firstName, lastName, message, contact, email } = request.body;
-        const updateQuery = `
-            UPDATE user
-            SET
-                firstName = '${firstName}',
-                lastName = '${lastName}',
-                contact = '${contact}',
-                message = '${message}',
-                email = '${email}'
-            WHERE
-                id = ${id}
-        `;
-        
-        connection.query(updateQuery, (error, result) => {
-            if (error) {
-                console.error('Error updating user:', error);
-                response.status(500).json({ error: 'Failed to Update' });
-            } else {
-                response.json({ message: 'User Updated successfully' });
-            }
-        });
-    } catch (error) {
-        console.error('An error occurred:', error);
-        response.status(500).json({ error: 'Internal server error' });
-    }
+  console.log('request', request.body);
+  try {
+    const { id } = request.body;
+    const deleteQuery = `DELETE FROM user WHERE id=${id}`;
+
+    DB.query(deleteQuery, (err, results) => {
+      if (err) {
+        console.error('Error deleting user:', err);
+        response.status(500).json({ error: 'Failed to delete user' });
+      } else {
+        console.log(results);
+        response.json({ message: 'User deleted successfully' });
+      }
+    });
+  } catch (error) {
+    console.error('An error occurred:', error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
 });
 
+// API to update user information in the database
+app.put('/updateUser', (request, response) => {
+  try {
+    const { id, firstName, lastName, message, contact, email } = request.body;
+    const updateQuery = `
+      UPDATE user
+      SET
+        firstName = '${firstName}',
+        lastName = '${lastName}',
+        contact = '${contact}',
+        message = '${message}',
+        email = '${email}'
+      WHERE
+        id = ${id}
+    `;
+
+    DB.query(updateQuery, (error, result) => {
+      if (error) {
+        console.error('Error updating user:', error);
+        response.status(500).json({ error: 'Failed to update user' });
+      } else {
+        response.json({ message: 'User updated successfully' });
+      }
+    });
+  } catch (error) {
+    console.error('An error occurred:', error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Start the server
 app.listen(port, () => {
   console.log(`The App is Running at ${port}`);
 });
