@@ -24,11 +24,10 @@ const ActionView = ({ row, getUserDetails }) => {
     }
     const handleDeleteData = async (data) => {
         try {
-            console.log("data.id:", data.id);
+            
             const response = await axios.delete('http://localhost:5000/deleteUserData', { data: { id: data.id } });
-            console.log('response', response);
+          
             if (response.data && response.data.message) {
-                console.log(response.data.message);
                 toast.success(response.data.message, {
                     position: toast.POSITION.TOP_RIGHT,
                     autoClose: 500,
