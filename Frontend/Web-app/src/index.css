@@ -1,7 +1,4 @@
-.header{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+body{
+  margin: 0px;
+  padding: 0px;
 }
