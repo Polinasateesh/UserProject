@@ -58,9 +58,9 @@ Follow these steps to set up and run the project locally:
      - Configure your project to connect to the newly created database by updating the appropriate configuration files. Ensure you modify the following settings with your own values:
 
    - defined:
-    host: 'localhost',      // Change to your database host.
-    user: 'root',           // Change to your database username
-    password: '',           // Change to your database password
+    host: 'localhost',      // Change to your database host - 
+    user: 'root',           // Change to your database username - 
+    password: '',           // Change to your database password - 
     database: 'client'      // Change to your database name
 
    
