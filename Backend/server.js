@@ -31,15 +31,15 @@ app.get('/getUsers', (request, response) => {
     const getQuery = `SELECT * FROM user`;
     DB.query(getQuery, (err, results) => {
       if (err) {
-        console.error('Error retrieving users:', err);
+       
         response.status(500).json({ error: 'Failed to retrieve users' });
       } else {
-        console.log(results);
+     
         response.json(results);
       }
     });
   } catch (error) {
-    console.error('An error occurred:', error);
+   
     response.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -52,37 +52,32 @@ app.post('/createUser', (request, response) => {
 
     DB.query(postQuery, [firstName, lastName, email, contact, message], (err, results) => {
       if (err) {
-        console.error('Error creating user:', err);
+       
         response.status(500).json({ error: 'Failed to create user' });
       } else {
-        console.log(results);
+        
         response.json({ message: 'User created successfully' });
       }
     });
   } catch (error) {
-    console.error('An error occurred:', error);
+    
     response.status(500).json({ error: 'Internal server error' });
   }
 });
 
 // API to delete a user from the database
 app.delete('/deleteUserData', (request, response) => {
-  console.log('request', request.body);
   try {
     const { id } = request.body;
     const deleteQuery = `DELETE FROM user WHERE id=${id}`;
-
     DB.query(deleteQuery, (err, results) => {
       if (err) {
-        console.error('Error deleting user:', err);
         response.status(500).json({ error: 'Failed to delete user' });
       } else {
-        console.log(results);
         response.json({ message: 'User deleted successfully' });
       }
     });
   } catch (error) {
-    console.error('An error occurred:', error);
     response.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -102,20 +97,18 @@ app.put('/updateUser', (request, response) => {
       WHERE
         id = ${id}
     `;
-
     DB.query(updateQuery, (error, result) => {
       if (error) {
-        console.error('Error updating user:', error);
         response.status(500).json({ error: 'Failed to update user' });
       } else {
-        response.json({ message: 'User updated successfully' });
+        response.json({message: 'User updated successfully'});
       }
     });
   } catch (error) {
-    console.error('An error occurred:', error);
     response.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 // Start the server
 app.listen(port, () => {

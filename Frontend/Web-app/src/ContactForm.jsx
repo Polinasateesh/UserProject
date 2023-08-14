@@ -22,6 +22,7 @@ const ContactForm = () => {
     const navigate = useNavigate();
     const location = useLocation()
     const isEditMode = location.state && location.state.data;
+    
     // setting form values based on edit mode or not
     useState(() => {
         if (isEditMode) {
@@ -131,8 +132,7 @@ const ContactForm = () => {
                             <TextField
                                 name='contact'
                                 label='Contact Number'
-                                type='tel'
-                                pattern="^[+]91[0-9]{10}$"
+                                type='number'
                                 required
                                 size="small"
                                 value={value.contact}
