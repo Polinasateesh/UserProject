@@ -35,26 +35,30 @@ Follow these steps to set up and run the project locally:
 
 #### Frontend Setup
 
-6. Navigate to the 'frontend' directory: `cd ../frontend`
+6. Navigate to the 'frontend' directory: `cd frontend` then `cd Web-app`
 7. Install frontend dependencies: `npm install`
 8. Start the frontend development server: `npm start`
 
-### Database Configuration
+## Database Configuration
 
-9.I use phpMyadmin and xampp server and  database name is client.
+1. **Database Setup:** First, ensure you have a MySQL database set up to store your project data. You can use tools like phpMyAdmin or XAMPP to manage your database.
 
-## Adding the 'user.sql' Database File
-
-10. included the 'user.sql' database file exported from phpMyAdmin into the project.
-
+2. **Import Database Schema:**
+   - Use phpMyAdmin to import the 'user.sql' database file. This file contains the schema for our project's database. Follow these steps:
+     - Open phpMyAdmin and log in.
+     - Select your database (if you don't have one, create a new database).
+     - Go to the "Import" tab.
+     - Choose the 'user.sql' file and click "Go" to import the schema.
+                           (OR)
+3. use your own Database configuration based on schema 
 
 ### Usage
 
-11. Open your browser and access the application at `http://localhost:3000`.
+11. Open your browser and access the application at ` http://localhost:5173/`.
 
 ## Notes
 
-- The application's frontend will be accessible at `http://localhost:3000`, and the backend will run on `http://localhost:5000`.
+- The application's frontend will be accessible at ` http://localhost:5173/`, and the backend will run on `http://localhost:5000`.
 - You can customize the application by modifying the code as needed.
 
 ## Contact

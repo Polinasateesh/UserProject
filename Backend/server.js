@@ -3,6 +3,8 @@ const app = express();
 const cors = require('cors');
 const mysql = require('mysql');
 const port = 5000;
+const path=require('path')
+const fs = require('fs');
 
 // Middleware
 app.use(express.json()); 
@@ -24,6 +26,7 @@ DB.connect((err) => {
     console.log('Connected to database');
   }
 });
+
 
 // API to retrieve users from the database
 app.get('/getUsers', (request, response) => {
@@ -108,9 +111,6 @@ app.put('/updateUser', (request, response) => {
     response.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
-// Start the server
 app.listen(port, () => {
-  console.log(`The App is Running at ${port}`);
-});
+        console.log(`The App is Running at ${port}`);
+      });
