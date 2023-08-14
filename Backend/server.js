@@ -3,8 +3,6 @@ const app = express();
 const cors = require('cors');
 const mysql = require('mysql');
 const port = 5000;
-const path=require('path')
-const fs = require('fs');
 
 // Middleware
 app.use(express.json()); 

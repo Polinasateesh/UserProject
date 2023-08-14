@@ -132,7 +132,7 @@ const ContactForm = () => {
                             <TextField
                                 name='contact'
                                 label='Contact Number'
-                                type='number'
+                                type='tel'
                                 required
                                 size="small"
                                 value={value.contact}

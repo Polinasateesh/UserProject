@@ -49,8 +49,24 @@ Follow these steps to set up and run the project locally:
      - Select your database (if you don't have one, create a new database).
      - Go to the "Import" tab.
      - Choose the 'user.sql' file and click "Go" to import the schema.
-                           (OR)
-3. use your own Database configuration based on schema 
+
+   (OR)
+
+3. **Custom Database Configuration:**
+   - If you prefer to use your own database configuration, follow these steps:
+     - Create a MySQL database to match the schema provided in the 'user.sql' file.
+     - Configure your project to connect to the newly created database by updating the appropriate configuration files. Ensure you modify the following settings with your own values:
+
+   - defined(
+    host: 'localhost',       // Change to your database host
+    user: 'root',            // Change to your database username
+    password: '',           // Change to your database password
+    database: 'client' )    // Change to your database name
+
+   
+  
+ 
+ 
 
 ### Usage
 
