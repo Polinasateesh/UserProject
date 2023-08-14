@@ -45,7 +45,7 @@ Follow these steps to set up and run the project locally:
 
 ## Adding the 'user.sql' Database File
 
-10. included the 'user.sql' database file exported from phpMyAdmin into your project.
+10. included the 'user.sql' database file exported from phpMyAdmin into the project.
 
 
 ### Usage
