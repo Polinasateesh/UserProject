@@ -43,6 +43,11 @@ Follow these steps to set up and run the project locally:
 
 9.I use phpMyadmin and xampp server and  database name is client.
 
+## Adding the 'user.sql' Database File
+
+10. included the 'user.sql' database file exported from phpMyAdmin into your project.
+
+
 ### Usage
 
 11. Open your browser and access the application at `http://localhost:3000`.
