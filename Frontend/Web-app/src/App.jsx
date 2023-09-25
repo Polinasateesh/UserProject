@@ -15,7 +15,7 @@ const App = () => {
         height: "60vh", 
       }}
     >
-      <CircularProgress size={50} />
+      <CircularProgress size={40} />
     </div>
   );
   return (

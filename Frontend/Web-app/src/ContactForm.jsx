@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Button, TextField, Grid, CircularProgress, InputAdornment } from '@mui/material';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -23,8 +23,9 @@ const ContactForm = () => {
     const location = useLocation()
     const isEditMode = location.state && location.state.data;
     
+    
     // setting form values based on edit mode or not
-    useState(() => {
+    useEffect(() => {
         if (isEditMode) {
             setValue(location.state.data);
         } else {
@@ -97,7 +98,7 @@ const ContactForm = () => {
     };
     return (
         <>
-            <ToastContainer />
+         <ToastContainer />
             <Card className='card-container'>
                 <p className='card-heading'>Contact Form</p>
                 <form onSubmit={handleSubmit}>

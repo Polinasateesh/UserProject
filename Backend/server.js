@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const mysql = require('mysql');
+const mysql = require('mysql')
 const port = 5000;
 
 // Middleware
@@ -17,14 +17,19 @@ const DB = mysql.createConnection({
 });
 
 // Checking database conntection
+
 DB.connect((err) => {
   if (err) {
     console.error('Error connecting to database:', err);
+    process.exit(1)
   } else {
     console.log('Connected to database');
+    app.listen(port, () => {
+      console.log(`The App is Running at ${port}`);
+    });
+
   }
 });
-
 
 // API to retrieve users from the database
 app.get('/getUsers', (request, response) => {
@@ -109,6 +114,4 @@ app.put('/updateUser', (request, response) => {
     response.status(500).json({ error: 'Internal server error' });
   }
 });
-app.listen(port, () => {
-        console.log(`The App is Running at ${port}`);
-      });
+

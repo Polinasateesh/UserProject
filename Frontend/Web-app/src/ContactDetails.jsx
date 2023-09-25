@@ -10,6 +10,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
@@ -69,24 +70,6 @@ const ContactDetails = () => {
         getUserDetails()
     }, [])
 
-
-    const filteredItems = data.filter(
-        (item) =>
-            (item.firstName &&
-                item.firstName
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase())) ||
-            (item.lastName &&
-                item.lastName.toLowerCase().includes(searchText.toLowerCase())) ||
-
-            (item &&
-                item.email.toLowerCase().includes(searchText.toLowerCase())) ||
-            (item.message &&
-                item.message
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase()))
-
-    )
     const getUserDetails = async () => {
         const response = await axios.get('http://localhost:5000/getUsers')
         var modifiedSno = response.data.map((o, i) => ({
@@ -98,7 +81,24 @@ const ContactDetails = () => {
     }
 
 
+    const filteredItems = data.filter(
+        (item) =>
+            (item &&
+                item.firstName
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase())) ||
+            (item&&
+                item.lastName.toLowerCase().includes(searchText.toLowerCase())) ||
 
+            (item &&
+                item.email.toLowerCase().includes(searchText.toLowerCase())) ||
+            (item.message &&
+                item.message
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase()))
+
+    )
+    
     const columns = [
         {
             name: 'SNo',
@@ -158,6 +158,7 @@ const ContactDetails = () => {
                         type="text"
                         size="small"
                         value={searchText}
+                        InputProps={{endAdornment:<SearchIcon/>}}
                         onChange={(event) => setSearchText(event.target.value)}
                         variant="outlined"
                     />
