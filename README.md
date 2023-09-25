@@ -4,6 +4,7 @@
 - React
 - Material-UI
 - React Table Component
+- css
 
 ### Backend
 - Node.js
@@ -57,16 +58,14 @@ Follow these steps to set up and run the project locally:
      - Create a MySQL database to match the schema provided in the 'user.sql' file.
      - Configure your project to connect to the newly created database by updating the appropriate configuration files. Ensure you modify the following settings with your own values:
 
-   - defined(
-    host: 'localhost',       // Change to your database host
-    user: 'root',            // Change to your database username
-    password: '',           // Change to your database password
-    database: 'client' )    // Change to your database name
+   - defined:
+   - host: 'localhost',      // Change to your database host
 
+   - user: 'root',           // Change to your database username
    
-  
- 
- 
+   - password: '',           // Change to your database password
+   
+    - database: 'client'      // Change to your database name
 
 ### Usage
 
