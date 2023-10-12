@@ -10,12 +10,10 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 const ActionView = ({ row, getUserDetails }) => {
     const navigate = useNavigate();
@@ -25,9 +23,16 @@ const ActionView = ({ row, getUserDetails }) => {
     }
     const handleDeleteData = async (data) => {
         try {
-            
-            const response = await axios.delete('http://localhost:5000/deleteUserData', { data: { id: data.id } });
-          
+
+            const jwtToken=window.localStorage.getItem('jwtToken')
+           
+            const config = {
+                headers:{
+                    'Authorization': `Bearer ${jwtToken}`,
+                  },
+              };
+            const response = await axios.delete('http://localhost:5000/delete',{ ...config, data: { id: data.id } });
+
             if (response.data && response.data.message) {
                 toast.success(response.data.message, {
                     position: toast.POSITION.TOP_RIGHT,
@@ -42,36 +47,51 @@ const ActionView = ({ row, getUserDetails }) => {
             console.error('An error occurred:', error);
         }
     }
-    const handleEditData=(data)=>{
-        navigate('/',{state:{data:data}})
+    const handleEditData = (data) => {
+        navigate('/ContactForm', { state: { data: data } })
     }
     return (
         <div className='action-colomn'>
-                <IconButton onClick={() => handleEditData(data)} size="small">
-                    <Tooltip title="Edit">
-                        <EditIcon color='primary' />
-                    </Tooltip>
-                </IconButton>
+            <IconButton onClick={() => handleEditData(data)} size="small">
+                <Tooltip title="Edit">
+                    <EditIcon color='primary' />
+                </Tooltip>
+            </IconButton>
 
-                <IconButton onClick={() => handleDeleteData(data)} size="small">
-                    <Tooltip title="Delete">
-                        <DeleteIcon color='warning' />
-                    </Tooltip>
-                </IconButton>
+            <IconButton onClick={() => handleDeleteData(data)} size="small">
+                <Tooltip title="Delete">
+                    <DeleteIcon color='warning' />
+                </Tooltip>
+            </IconButton>
         </div>
 
     )
 }
 const ContactDetails = () => {
     const [data, setData] = useState([])
-    const [searchText, setSearchText] = useState('')
+   
+    const navigate=useNavigate()
+
+    useEffect(()=>{
+        const jwtToken=window.localStorage.getItem('jwtToken')
+        if(jwtToken===null){
+            navigate("/")
+        }
+    },[])
 
     useEffect(() => {
         getUserDetails()
     }, [])
 
+
     const getUserDetails = async () => {
-        const response = await axios.get('http://localhost:5000/getUsers')
+        const jwtToken=window.localStorage.getItem('jwtToken')
+            const config = {
+                headers:{
+                    'Authorization': `Bearer ${jwtToken}`,
+                  },
+              };
+        const response = await axios.get('http://localhost:5000/details',config)
         var modifiedSno = response.data.map((o, i) => ({
             ...o,
             sno: i + 1,
@@ -81,30 +101,15 @@ const ContactDetails = () => {
     }
 
 
-    const filteredItems = data.filter(
-        (item) =>
-            (item &&
-                item.firstName
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase())) ||
-            (item&&
-                item.lastName.toLowerCase().includes(searchText.toLowerCase())) ||
+   
 
-            (item &&
-                item.email.toLowerCase().includes(searchText.toLowerCase())) ||
-            (item.message &&
-                item.message
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase()))
-
-    )
-    
+ 
     const columns = [
         {
             name: 'SNo',
             selector: (row) => row.sno,
             sortable: true,
-            width:'75px'
+            width: '75px'
         },
         {
             name: 'First Name',
@@ -118,6 +123,7 @@ const ContactDetails = () => {
             sortable: true,
 
         },
+       
         {
             name: 'Contact',
             selector: row => row.contact,
@@ -125,11 +131,12 @@ const ContactDetails = () => {
 
         },
         {
-            name: 'Email',
-            selector: row => <Tooltip title={row.email}>{row.email}</Tooltip>,
+            name: 'Order Count',
+            selector: row => row.orderCount,
             sortable: true,
 
         },
+        
         {
             name: 'Message',
             selector: row => (
@@ -139,7 +146,15 @@ const ContactDetails = () => {
             ),
             sortable: true,
         },
-        
+
+       
+        {
+            name: 'Created Date',
+            selector: row => <Tooltip title={row.createdDate}>{row.createdDate}</Tooltip>,
+            sortable: true,
+
+        },
+       
         {
             name: 'Action',
             selector: (row) => <ActionView row={row} getUserDetails={getUserDetails} />,
@@ -149,25 +164,16 @@ const ContactDetails = () => {
     ];
     return (
         <>
-        <ToastContainer/>
+            <ToastContainer />
             <Card className='card-container'>
                 <div className='card-header'>
-                    <p className='card-heading'>Contact Details</p>
-                    <TextField
-                        label="Search"
-                        type="text"
-                        size="small"
-                        value={searchText}
-                        InputProps={{endAdornment:<SearchIcon/>}}
-                        onChange={(event) => setSearchText(event.target.value)}
-                        variant="outlined"
-                    />
+                    <p className='card-heading'>Customer Details</p>
 
                 </div>
 
                 <DataTable
                     columns={columns}
-                    data={filteredItems}
+                    data={data}
                     pagination
                     striped
                     highlightOnHover
@@ -177,7 +183,9 @@ const ContactDetails = () => {
                     paginationRowsPerPageOptions={[5, 10, 20, 50, 75, 100]}
                     customStyles={customStyles}
                 />
+               
             </Card>
+           
         </>
     );
 }

@@ -1,12 +1,19 @@
 import { Link } from "react-router-dom";
 import './App.css'
 import logo from "./assets/pngwing.com.png";
-
+import { useEffect, useState } from "react";
 const NavBar = () => {
+  
+ 
+    const jwtToken=window.localStorage.getItem('jwtToken')
+
+  
+if(jwtToken!==null){
   return (
-    <div className="nav-container">
+    <>
+     <div className="nav-container">
       <Link
-        to="/"
+        to="ContactForm"
         className="link"
       >
         <img src={logo} alt="logo" />
@@ -16,21 +23,27 @@ const NavBar = () => {
         className=".nav-items"
       >
         <Link
-          to="/"
+          to="ContactForm"
           className="link"
-          activeClassName="active-link"
+         
         >
-          Contact Form
+          Customer Form
         </Link>
         <Link
           to="ContactDetails"
           className="link"
-          activeClassName="active-link"
+          
         >
-          Contact Details
+          Customer Details
         </Link>
       </div>
     </div>
-  );
+    </>
+  )
+
+}else{
+  return null
+}
+  
 };
 export default NavBar;

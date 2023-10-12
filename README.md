@@ -38,7 +38,7 @@ Follow these steps to set up and run the project locally:
 
 6. Navigate to the 'frontend' directory: `cd frontend` then `cd Web-app`
 7. Install frontend dependencies: `npm install`
-8. Start the frontend development server: `npm start`
+8. Start the frontend development server: `npm run dev`
 
 ## Database Configuration
 

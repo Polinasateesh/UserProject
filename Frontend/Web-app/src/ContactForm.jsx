@@ -7,23 +7,33 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import SendIcon from '@mui/icons-material/Send'
 import CloseIcon from '@mui/icons-material/Close'
+import moment from 'moment'
 
 const defaultValues = {
     firstName: '',
     lastName: '',
     contact: '',
-    email: '',
+    orderCount: '',
     message: '',
+
 };
 
 const ContactForm = () => {
     const [value, setValue] = useState(defaultValues);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null)
     const navigate = useNavigate();
     const location = useLocation()
     const isEditMode = location.state && location.state.data;
-    
-    
+
+
+    useEffect(() => {
+        const jwtToken = window.localStorage.getItem('jwtToken')
+        if (jwtToken === null) {
+            navigate("/")
+        }
+    }, [])
+
     // setting form values based on edit mode or not
     useEffect(() => {
         if (isEditMode) {
@@ -46,20 +56,55 @@ const ContactForm = () => {
     const handleChange = (event) => {
         const inputName = event.target.name;
         const inputValue = event.target.value;
+
         setValue({ ...value, [inputName]: inputValue });
+        
     };
 
     // Handle form submission
     const handleSubmit = async (event) => {
+
         event.preventDefault();
         setIsLoading(true);
+        const date = moment().format('DD-MM-YYYY')
+
+        
 
         try {
+            const jwtToken = window.localStorage.getItem('jwtToken')
+
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`,
+                },
+            };
+
+           
+
             let response;
             if (isEditMode) {
-                response = await axios.put('http://localhost:5000/updateUser', value);
+                const newValues1 = {
+                    id:location.state.data.id,
+                    firstName: value.firstName,
+                    lastName: value.lastName,
+                    contact: value.contact,
+                    orderCount: value.orderCount,
+                    message: value.message,
+                
+                }
+                response = await axios.put('http://localhost:5000/update', newValues1,config);
             } else {
-                response = await axios.post('http://localhost:5000/createUser', value);
+                const newValues = {
+               
+                    firstName: value.firstName,
+                    lastName: value.lastName,
+                    contact: value.contact,
+                    orderCount: value.orderCount,
+                    message: value.message,
+                    createdDate: date
+        
+                }
+                response = await axios.post('http://localhost:5000/insert',newValues ,config );
             }
             if (response.data && response.data.message) {
                 // Showing success toast 
@@ -86,7 +131,6 @@ const ContactForm = () => {
             }
         } catch (error) {
             // Showing error toast
-            console.log(error);
             toast.error('An error occurred', {
                 position: toast.POSITION.TOP_RIGHT,
                 autoClose: 500,
@@ -96,12 +140,13 @@ const ContactForm = () => {
             });
         }
     };
+
     return (
         <>
-         <ToastContainer />
+            <ToastContainer />
             <Card className='card-container'>
-                <p className='card-heading'>Contact Form</p>
-                <form onSubmit={handleSubmit}>
+                <p className='card-heading'>Customer Form</p>
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -149,20 +194,21 @@ const ContactForm = () => {
                             />
 
                         </Grid>
+
                         <Grid item xs={12} sm={6}>
                             <TextField
-                                name='email'
+                                name='orderCount'
+                                label='Order Count'
+                                type='number'
                                 required
-                                label='Email Address'
-                                type='email'
                                 size="small"
-                                value={value.email}
+                                value={value.orderCount}
                                 onChange={handleChange}
                                 fullWidth
                                 variant='outlined'
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12}>
                             <TextField
                                 name='message'
                                 label='Message'
@@ -174,10 +220,13 @@ const ContactForm = () => {
                                 fullWidth
                                 variant='outlined'
                                 multiline
-                                inputProps={{ maxLength: 4000 }}
                                 rows={4}
+
+
                             />
                         </Grid>
+
+                       
                     </Grid>
                     <div className='button-container'>
                         <Button variant='outlined' color='warning' onClick={handleClose} startIcon={
